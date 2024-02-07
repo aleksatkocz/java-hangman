@@ -6,17 +6,18 @@ import java.util.Set;
 public class Guess {
 
     public void guess (String word) {
+
         char[] wordLetters = word.toCharArray();
         char[] emptySpaces = generateEmptySpaces(word);
         int lettersToGuess = word.length();
         Set<Character> lettersUsed = new HashSet<>();
         Hangman hangman = new Hangman();
-        int life = hangman.HANGMANPICS.length;
+        int life = Configuration.getInstance().hangedManPic().length;
 
         while (lettersToGuess>=0) {
             System.out.println();
             printBoard(emptySpaces);
-            System.out.print("Podaj literę: ");
+            System.out.print("\nPodaj literę: ");
             char letter = getString().toUpperCase().charAt(0);
             if (lettersUsed.contains(letter)){
                 while (lettersUsed.contains(letter)) {
@@ -40,14 +41,14 @@ public class Guess {
             if (LetterToGuessBefore == LetterToGuessAfter) {
                 life --;
                 lose(life);
-                System.out.println("Zła litera, straciłeś życie. Pozostało Ci " + life + " żyć");
+                System.out.println("Zła litera, straciłeś życie. Pozostałe życia: " + life +".");
             }
             if (life == 0) {
-                System.out.println("Przegrałeś!");
+                System.out.println("\nPrzegrałeś!");
                 System.out.println("Słowo do odgadnięcia to: " + word);
                 break;
             } else if (lettersToGuess == 0) {
-                System.out.println("Gratulacje, wygrałeś!");
+                System.out.println("\nGratulacje, wygrałeś!");
                 System.out.println("Odgadnięte słowo to: " + word);
                 break;
             }
@@ -75,7 +76,7 @@ public class Guess {
     }
     public void lose (int life){
         Hangman hangman = new Hangman();
-        String[] stage = hangman.HANGMANPICS;
-        System.out.println(stage[6-life]);
+        String[] stage = Configuration.getInstance().hangedManPic();
+        System.out.println(stage[life]);
     }
 }

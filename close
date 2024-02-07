@@ -1,0 +1,164 @@
+[1mdiff --git a/src/main/java/pl/edu/agh/hangman/ChooseWord.java b/src/main/java/pl/edu/agh/hangman/ChooseWord.java[m
+[1mindex eb1a06f..051ec90 100644[m
+[1m--- a/src/main/java/pl/edu/agh/hangman/ChooseWord.java[m
+[1m+++ b/src/main/java/pl/edu/agh/hangman/ChooseWord.java[m
+[36m@@ -7,8 +7,69 @@[m [mimport java.util.ArrayList;[m
+ public class ChooseWord {[m
+     public String chooseWord (ArrayList<String> words) {[m
+         Random random = new Random();[m
+[31m-        int randomWord = random.nextInt(words.size());[m
+[31m-        return words.get(randomWord);[m
+[32m+[m
+[32m+[m[32m        System.out.println("Wylosuj losowe słowo bądź wprowadź długość słowa do odgadnięcia.");[m
+[32m+[m[32m        System.out.println("1 -> losowe słowo");[m
+[32m+[m[32m        System.out.println("2 -> wprowadź długość słowa samodzielnie");[m
+[32m+[m[32m        System.out.print("Twój wybór: ");[m
+[32m+[m[32m        int userChoice = getInt();[m
+[32m+[m
+[32m+[m[32m        switch (userChoice) {[m
+[32m+[m[32m            case 1 -> {[m
+[32m+[m[32m                int randomWord = random.nextInt(words.size());[m
+[32m+[m[32m                return words.get(randomWord);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            case 2 -> {[m
+[32m+[m[32m                System.out.print("Jak długie słowo chcesz wylosować?: ");[m
+[32m+[m[32m                int wordLengthUserChoice = getInt();[m
+[32m+[m[32m                ArrayList<String> selectedWords = selectWords(words,wordLengthUserChoice);[m
+[32m+[m[32m                while (selectedWords.isEmpty()) {[m
+[32m+[m[32m                    System.out.print("Nie ma wyrazów w bazie o podanej długości liter. Podaj inną długość: ");[m
+[32m+[m[32m                    wordLengthUserChoice = getInt();[m
+[32m+[m[32m                    selectedWords = selectWords(words,wordLengthUserChoice);[m
+[32m+[m[32m                }[m
+[32m+[m[32m                System.out.println("Losuję pośród liczby wyrazów w bazie: " + selectedWords.size() + ".");[m
+[32m+[m[32m                countDown();[m
+[32m+[m[32m                int randomSelectedWord = random.nextInt(selectedWords.size());[m
+[32m+[m[32m                return selectedWords.get(randomSelectedWord);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            default -> {[m
+[32m+[m[32m                System.out.println("Wprowadziłeś złą odpowiedź. Długość słowa została wylosowana.");[m
+[32m+[m[32m                int randomWord = random.nextInt(words.size());[m
+[32m+[m[32m                return words.get(randomWord);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public int getInt() {[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            Scanner scanner = new Scanner(System.in);[m
+[32m+[m[32m            return scanner.nextInt();[m
+[32m+[m[32m        } catch (InputMismatchException e) {[m
+[32m+[m[32m            System.out.print("Możesz wpisać tylko cyfrę. Spróbuj ponownie: ");[m
+[32m+[m[32m            return getInt();[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private ArrayList<String> selectWords (ArrayList<String> words, int selectedLength) {[m
+[32m+[m[32m        ArrayList<String> selectedWords = new ArrayList<>();[m
+[32m+[m[32m        for (String word : words) {[m
+[32m+[m[32m            if (word.length() == selectedLength) {[m
+[32m+[m[32m                selectedWords.add(word);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return selectedWords;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void countDown () {[m
+[32m+[m[32m        for (int i = 0; i<3; i++) {[m
+[32m+[m[32m            System.out.println("...");[m
+[32m+[m[32m            try {[m
+[32m+[m[32m                Thread.sleep(1000);[m
+[32m+[m[32m            } catch (InterruptedException e) {[m
+[32m+[m[32m                throw new RuntimeException(e);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+     }[m
+ }[m
+ [m
+[1mdiff --git a/src/main/java/pl/edu/agh/hangman/Configuration.java b/src/main/java/pl/edu/agh/hangman/Configuration.java[m
+[1mindex 69238c1..04af2a1 100644[m
+[1m--- a/src/main/java/pl/edu/agh/hangman/Configuration.java[m
+[1m+++ b/src/main/java/pl/edu/agh/hangman/Configuration.java[m
+[36m@@ -1,5 +1,32 @@[m
+ package pl.edu.agh.hangman;[m
+ [m
+[31m-public class KonfigurationFile {[m
+[31m-    [m
+[32m+[m[32mimport static pl.edu.agh.hangman.Hangman.HANGMANPICS;[m
+[32m+[m
+[32m+[m[32mpublic class Configuration {[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    private static Configuration instance;[m
+[32m+[m
+[32m+[m[32m    private Configuration() {}[m
+[32m+[m
+[32m+[m[32m    public static Configuration getInstance() {[m
+[32m+[m[32m        if (instance == null) {[m
+[32m+[m[32m            instance = new Configuration();[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return instance;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public String dataSource() {[m
+[32m+[m[32m       return new ReadTextFromInternet("https://www.wordnik.com/words").readFile().toUpperCase();[m
+[32m+[m[32m        // return new ChooseWord().chooseWord(new ReadTextFromfile("/slowa.txt").writeWords());[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public String[] hangedManPic() {[m
+[32m+[m[32m        return Hangman.HANGMANPICS;[m
+[32m+[m[32m       // return Hangman.christmasTree;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m
+[32m+[m
+ }[m
+[1mdiff --git a/src/main/java/pl/edu/agh/hangman/Guess.java b/src/main/java/pl/edu/agh/hangman/Guess.java[m
+[1mindex 83e8373..5308b06 100644[m
+[1m--- a/src/main/java/pl/edu/agh/hangman/Guess.java[m
+[1m+++ b/src/main/java/pl/edu/agh/hangman/Guess.java[m
+[36m@@ -6,17 +6,18 @@[m [mimport java.util.Set;[m
+ public class Guess {[m
+ [m
+     public void guess (String word) {[m
+[32m+[m
+         char[] wordLetters = word.toCharArray();[m
+         char[] emptySpaces = generateEmptySpaces(word);[m
+         int lettersToGuess = word.length();[m
+         Set<Character> lettersUsed = new HashSet<>();[m
+         Hangman hangman = new Hangman();[m
+[31m-        int life = hangman.HANGMANPICS.length;[m
+[32m+[m[32m        int life = Configuration.getInstance().hangedManPic().length;[m
+ [m
+         while (lettersToGuess>=0) {[m
+             System.out.println();[m
+             printBoard(emptySpaces);[m
+[31m-            System.out.print("Podaj literę: ");[m
+[32m+[m[32m            System.out.print("\nPodaj literę: ");[m
+             char letter = getString().toUpperCase().charAt(0);[m
+             if (lettersUsed.contains(letter)){[m
+                 while (lettersUsed.contains(letter)) {[m
+[36m@@ -40,14 +41,14 @@[m [mpublic class Guess {[m
+             if (LetterToGuessBefore == LetterToGuessAfter) {[m
+                 life --;[m
+                 lose(life);[m
+[31m-                System.out.println("Zła litera, straciłeś życie. Pozostało Ci " + life + " żyć");[m
+[32m+[m[32m                System.out.println("Zła litera, straciłeś życie. Pozostałe życia: " + life +".");[m
+             }[m
+             if (life == 0) {[m
+[31m-                System.out.println("Przegrałeś!");[m
+[32m+[m[32m                System.out.println("\nPrzegrałeś!");[m
+                 System.out.println("Słowo do odgadnięcia to: " + word);[m
+                 break;[m
+             } else if (lettersToGuess == 0) {[m
+[31m-                System.out.println("Gratulacje, wygrałeś!");[m
+[32m+[m[32m                System.out.println("\nGratulacje, wygrałeś!");[m
+                 System.out.println("Odgadnięte słowo to: " + word);[m
+                 break;[m
+             }[m
+[36m@@ -75,7 +76,7 @@[m [mpublic class Guess {[m
+     }[m
+     public void lose (int life){[m
+         Hangman hangman = new Hangman();[m
+[31m-        String[] stage = hangman.HANGMANPICS;[m
+[31m-        System.out.println(stage[6-l
